@@ -1,4 +1,4 @@
-let User = require('../models/user.model');
+let User = require('../models/admin-user.model');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const bcrypt = require('bcrypt');
@@ -53,10 +53,10 @@ exports.signup = function(req, res) {
 };
 
 // Controller for login
-exports.login = function(req, res, next) {
+exports.login = function(req, res) {
   User.find({ email: req.body.email })
     .exec()
-    .then(user => {
+    .then((user) => {
       if (user.length < 1) {
         return res.status(401).json({
           success: false,
@@ -68,7 +68,7 @@ exports.login = function(req, res, next) {
           return res.status(401).json({
             success: false,
             message: "Authentication failed"
-          });
+          })
         }
         if (result) {
           const token = jwt.sign(
@@ -88,20 +88,18 @@ exports.login = function(req, res, next) {
           });
         }
         res.status(401).json({
-          success: false,
           message: "Authentication failed"
-        })
-      })
+        });
+      });
     })
     .catch(err => {
       console.log(err);
       res.status(500).json({
         success: false,
-        message: "Authentication failed",
         error: err
       });
     });
-}
+};
 
 // Controller for deleting user
 exports.delete = function(req, res, next) {
@@ -117,12 +115,8 @@ exports.delete = function(req, res, next) {
       console.log(err);
       res.status(500).json({
         success: false,
-        message: "Error deleting the user",
+        message: "Error deleting user",
         error: err
-      });
-    });
-}
-
-exports.test = function(req,res){
-  res.send("This is test route!");
+      })
+    })
 };

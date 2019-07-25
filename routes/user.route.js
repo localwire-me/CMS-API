@@ -1,12 +1,13 @@
-let express =require('express');
-let router=express.Router();//Expreess Router
+let express = require('express');
+let router = express.Router();// Express Router
 
-//Import the user Controller
-let userController=require('../controllers/user.controller');
+// Import the user Controller
+let userController = require('../controllers/user.controller');
 
-//Create the routes
-router.get('/test',userController.test);//To test thr route 
+// Create the routes
+router.get('/test',userController.test); //To test the route 
 
+router.post('/signup', userController.signup);
 
-//Export the router
-module.exports=router;
+// Export the router
+module.exports = router;

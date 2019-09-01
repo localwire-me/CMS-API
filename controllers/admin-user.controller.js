@@ -1,11 +1,12 @@
-let User = require('../models/admin-user.model');
+let AdminUser = require('../models/admin-user.model');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 
 // Controller for signup
 exports.signup = function(req, res) {
-  User.find({ email: req.body.email })
+  AdminUser.find({ email: req.body.email })
       .exec()
       .then(user => {
         if (user.length >= 1) {
@@ -19,7 +20,7 @@ exports.signup = function(req, res) {
                 error: err
               });
             } else {
-              const user = new User({
+              const user = new AdminUser({
                 email: req.body.email,
                 password: hash,
                 name: req.body.name,
@@ -53,10 +54,10 @@ exports.signup = function(req, res) {
 };
 
 // Controller for login
-exports.login = function(req, res) {
-  User.find({ email: req.body.email })
+exports.login = function(req, res, next) {
+  AdminUser.find({ email: req.body.email })
     .exec()
-    .then((user) => {
+    .then(user => {
       if (user.length < 1) {
         return res.status(401).json({
           success: false,
@@ -68,7 +69,7 @@ exports.login = function(req, res) {
           return res.status(401).json({
             success: false,
             message: "Authentication failed"
-          })
+          });
         }
         if (result) {
           const token = jwt.sign(
@@ -81,6 +82,7 @@ exports.login = function(req, res) {
               expiresIn: "24h"
             }
           );
+          user[0].loginTrack
           return res.status(200).json({
             success: true,
             message: "Authentication successful",
@@ -88,22 +90,24 @@ exports.login = function(req, res) {
           });
         }
         res.status(401).json({
+          success: false,
           message: "Authentication failed"
-        });
-      });
+        })
+      })
     })
     .catch(err => {
       console.log(err);
       res.status(500).json({
         success: false,
+        message: "Authentication failed",
         error: err
       });
     });
-};
+}
 
 // Controller for deleting user
 exports.delete = function(req, res, next) {
-  User.remove({ _id: req.params.userId })
+  AdminUser.remove({ _id: req.params.userId })
     .exec()
     .then(result => {
       res.status(200).json({
@@ -115,8 +119,28 @@ exports.delete = function(req, res, next) {
       console.log(err);
       res.status(500).json({
         success: false,
-        message: "Error deleting user",
+        message: "Error deleting the user",
         error: err
-      })
-    })
+      });
+    });
+}
+
+exports.test = function(req,res){
+  res.send("This is test route!");
+};
+
+exports.getAllAdminUsers = function(req, res, next) {
+  AdminUser.find({}, (err, users) => {
+    if (err) {
+      res.json({
+        success: false,
+        message: "Error while retrieving users"
+      });
+    }
+    res.json({
+      success: true,
+      message: "Users retrieved successfully",
+      users: users
+    });
+  });
 };

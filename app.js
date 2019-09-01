@@ -33,14 +33,19 @@ app.use((err, req, res, next) => {
 });
 
 // Routes
-let userRoutes = require('./routes/user.route');
+// let userRoutes = require('./routes/admin-user.route');
 let adminUserRoutes = require('./routes/admin-user.route');
 let authorRoutes = require('./routes/author.route');
+let tagRoutes = require('./routes/tag.route');
+let categoryRoutes = require('./routes/category.route');
+let superUserRoutes = require('./routes/super-admin-user.route');
+
 // Routes of the app
-app.use('/user', userRoutes);
+// app.use('/users', userRoutes);
 app.use('/admin-panel', adminUserRoutes);
 app.use('/authors', authorRoutes);
-
+app.use('/tags', tagRoutes);
+app.use('/categories', categoryRoutes);
 
 // Server listen on port config.port
 app.listen(config.port, () => {

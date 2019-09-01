@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const bcrypt = require('bcrypt');
-
-const AdminUserSchema = new Schema({
+const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
+  username: { type: String, unique: true, lowercase: true },
   name: String,
   password: String,
   picture: String,
@@ -16,7 +15,8 @@ const AdminUserSchema = new Schema({
     country: String,
     postalCode: String
   },
+  loginTrack: [{ type: Date, default: Date.now }],
   created: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('AdminUser', AdminUserSchema);
+module.exports = mongoose.model('AdminUser', UserSchema);

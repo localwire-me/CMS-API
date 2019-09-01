@@ -3,6 +3,7 @@ const Author = require('../models/author.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+// Function for retrieving all authors
 exports.getAllAuthors = function(req, res, next) {
   Author.find({}, (err, authors) => {
     if (err) {
@@ -19,6 +20,7 @@ exports.getAllAuthors = function(req, res, next) {
   });
 };
 
+// Function for retrieving the user with a specific author
 exports.getAuthor = function(req, res, next) {
   const id = req.params.id;
   Author.find({_id: id}, (err, author) => {
@@ -36,6 +38,7 @@ exports.getAuthor = function(req, res, next) {
   });
 };
 
+// Function for posting a new author
 exports.postAuthor = function(req, res, next) {
   let author = new Author();
   author.email = req.body.email;
@@ -60,6 +63,7 @@ exports.postAuthor = function(req, res, next) {
     });
 }
 
+// Function for deleting an author
 exports.deleteAuthor = function(req, res, next) {
 
   Author.find({ _id: req.params.id })
